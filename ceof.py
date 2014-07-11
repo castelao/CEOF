@@ -10,6 +10,31 @@ from numpy import ma
 from UserDict import UserDict
 
 
+def ceof2D(data):
+    """ Estimate the complex EOF on a 2D array.
+
+        Time should be the first dimension, so that the PC (eigenvalues) will
+          be in respect to the first dimension.
+
+    """
+    assert type(data) is np.ndarray
+    assert np.isfinite(data).all()
+    # ---- Creating the complex field using Hilbert transform
+    input_H = numpy.empty(data.shape, dtype=data.dtype)
+    import scipy.fftpack
+    for i in range(data.shape[1]):
+        input_H[:,i] = scipy.fftpack.hilbert(data[:,i])
+
+    U = data + 1j*input_H
+    #if U.mask.any():
+    #    print "There are masked values in U at CEOF_2D()"
+
+    from pyclimate.svdeofs import svdeofs, getvariancefraction
+    pcs, lambdas, eofs = svdeofs(U)
+
+    return {'pcs': pcs, 'lambdas': lambdas, 'eofs': eofs}
+
+
 class CEOF_2D(UserDict):
     """ Complex EOF of a scalar 2D array
     """
