@@ -17,8 +17,11 @@ def ceof2D(data):
           be in respect to the first dimension.
 
     """
-    assert type(data) is np.ndarray
-    assert np.isfinite(data).all()
+    assert type(data) is np.ndarray,
+        "ceof2D requires an ndarray but got: %s" % type(data)
+    assert np.isfinite(data).all(),
+        "ceof2D requires a full valid values array"
+
     # ---- Creating the complex field using Hilbert transform
     input_H = numpy.empty(data.shape, dtype=data.dtype)
     import scipy.fftpack
@@ -26,8 +29,6 @@ def ceof2D(data):
         input_H[:,i] = scipy.fftpack.hilbert(data[:,i])
 
     U = data + 1j*input_H
-    #if U.mask.any():
-    #    print "There are masked values in U at CEOF_2D()"
 
     from pyclimate.svdeofs import svdeofs, getvariancefraction
     pcs, lambdas, eofs = svdeofs(U)
