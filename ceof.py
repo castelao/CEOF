@@ -17,9 +17,9 @@ def ceof2D(data):
           be in respect to the first dimension.
 
     """
-    assert type(data) is np.ndarray,
+    assert type(data) is np.ndarray, \
         "ceof2D requires an ndarray but got: %s" % type(data)
-    assert np.isfinite(data).all(),
+    assert np.isfinite(data).all(), \
         "ceof2D requires a full valid values array"
 
     # ---- Creating the complex field using Hilbert transform
