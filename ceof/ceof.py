@@ -349,7 +349,7 @@ class CEOF(UserDict):
 
     def filter(self,var,l,type,l2=None):
         #from maud import window_mean
-        from maud import window_1Dmean_grid
+        from maud import window_1Dmean_grid, get_halfpower_period
         from datetime import timedelta
         
         if len((set(numpy.diff(self.data['datetime'])))) !=1:
@@ -375,7 +375,7 @@ class CEOF(UserDict):
                 print "This filter will have no effect. Data series have not enough resolution."
                 return
 
-            lowpass=window_mean.window_1Dmean_grid(self.data[var],ll/2.,method='hann',axis=0)
+            lowpass = window_1Dmean_grid(self.data[var],ll/2.,method='hann',axis=0)
             #lowpass=window_mean.window_1Dmean(self.data[var],ll,method='hanning',axis=0)
             if type=='lowpass':
                 output=lowpass
@@ -386,7 +386,8 @@ class CEOF(UserDict):
             else:
                 print "On function filter, type must be lowpass or highpass"
 
-            halfpower_period = window_mean.get_halfpower_period(self.data[var],output,dt=dt)
+            halfpower_period = get_halfpower_period(self.data[var],
+                    output, dt=dt)
             print "Filter half window size: %s" % l
             print "Half Power Period: %s" % halfpower_period
             self.halfpower_period = halfpower_period
