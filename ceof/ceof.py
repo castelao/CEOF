@@ -84,6 +84,7 @@ class CEOF_2D(UserDict):
 	print "Considering the first %s of %s modes." % (nmodes,len(lambdas))
 
         # ---- Normalize -----------------------------------------------------
+        from utils import scaleEOF
         if 'normalize' in  self.cfg:
             pcs, eofs = scaleEOF(pcs, eofs, scaletype=self.cfg['normalize'])
 
@@ -634,61 +635,3 @@ class CEOF(UserDict):
         #ind = (numpy.absolute(dphase[1:-1,:])>3) & (pcs_phase[:-2,:]<0) & (pcs_phase[2:,:]<0)
         #ind = (numpy.absolute(dphase[1:-1,:])>3) & (pcs_phase[:-2,:]>0) & (pcs_phase[2:,:]<0)
         # --------------------------------------------------------------------
-
-def scaleEOF(pcs, eofs, scaletype):
-    """ Scale the EOFS and PCS preserving the mode
-
-        If scaled by the pcmedian:
-            pc = pc/median(pc)
-            eof = eof*median(pc)
-        This is the scale that I most use. On this case, the EOF structure
-          has that magnitude at least half of the timeseries.
-    """
-
-    import pdb; pdb.set_trace()
-    assert pcs.ndim == 2
-    assert eofs.ndim == 2, "Expected a 2D EOF array."
-    assert pcs.shape[-1] == eofs.shape[-1]
-
-    nmodes = pcs.shape[-1]
-
-    if scaletype == 'pc_std':
-        print "Normalizing by the pc_std"
-        for n in range(nmodes):
-            fac = (numpy.absolute(pcs[:,n])).std()
-            pcs[:,n] = pcs[:,n]/fac
-            eofs[:,n] = eofs[:,n]*fac
-
-    elif scaletype == 'pc_median':
-        print "Normalizing by the pc_median"
-        for n in range(nmodes):
-            fac = numpy.median((numpy.absolute(pcs[:,n])))
-            pcs[:,n] = pcs[:,n]/fac
-            eofs[:,n] = eofs[:,n]*fac
-
-    elif scaletype == 'pc_max':
-        print "Normalizing by the pc_max"
-        for n in range(nmodes):
-            fac = (numpy.absolute(pcs[:,n])).max()
-            pcs[:,n] = pcs[:,n]/fac
-            eofs[:,n] = eofs[:,n]*fac
-
-    elif scaletype == 'eof_std':
-        print "Normalizing by the eof_std"
-        for n in range(nmodes):
-            fac = (numpy.absolute(eofs[:,n])).std()
-            eofs[:,n] = eofs[:,n]/fac
-            pcs[:,n] = pcs[:,n]*fac
-
-    elif scaletype == 'eof_max':
-        print "Normalizing by the eof_max"
-        for n in range(nmodes):
-            fac = (numpy.absolute(eofs[:,n])).max()
-            eofs[:,n] = eofs[:,n]/fac
-            pcs[:,n] = pcs[:,n]*fac
-
-    else:
-        print "Don't understand the normalization config: %s" % scaletype
-        return
-
-    return pcs, eofs
