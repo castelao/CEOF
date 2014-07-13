@@ -599,7 +599,14 @@ class CEOF(UserDict):
                 else:
                     filename="../figs/CEOF_mode%s.eps" % (n+1)
                 limits={'LatIni':-5, 'LatFin':15, 'LonIni':-60, 'LonFin':-25}
-                self.plot(self['eofs'][:,:,n],self['pcs'][:,n],(n+1),self['variancefraction'][n],filename=filename,limits=limits,cumvarfrac=self['variancefraction'][:(n+1)].sum())
+                #self.plot(self['eofs'][:,:,n],self['pcs'][:,n],(n+1),self['variancefraction'][n],filename=filename,limits=limits,cumvarfrac=self['variancefraction'][:(n+1)].sum())
+                import graphics
+                graphics.plot(self['eofs'][:,:,n], self['pcs'][:,n],
+                        (n+1),self['variancefraction'][n],
+                        filename=filename,
+                        data = self.data,
+                        limits=limits,
+                        cumvarfrac=self['variancefraction'][:(n+1)].sum())
                 #fig.show()
 
                 #import pylab
@@ -666,8 +673,3 @@ class CEOF(UserDict):
         #ind = (numpy.absolute(dphase[1:-1,:])>3) & (pcs_phase[:-2,:]<0) & (pcs_phase[2:,:]<0)
         #ind = (numpy.absolute(dphase[1:-1,:])>3) & (pcs_phase[:-2,:]>0) & (pcs_phase[2:,:]<0)
         # --------------------------------------------------------------------
-    def plot(self,eof,pc,nmode,varfrac,filename,limits=None,cumvarfrac=None):
-        import graphics
-        graphics.plot(self, eof, pc, nmode, varfrac, filename, limits=None,
-                cumvarfrac=None)
-
