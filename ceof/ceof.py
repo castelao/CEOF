@@ -9,6 +9,9 @@ import numpy as np
 from numpy import ma
 from UserDict import UserDict
 
+from pyclimate.svdeofs import svdeofs, getvariancefraction
+
+from utils import scaleEOF
 
 def ceof_scalar2D(data):
     """ Estimate the complex EOF on a 2D array.
@@ -30,7 +33,6 @@ def ceof_scalar2D(data):
 
     U = data + 1j*input_H
 
-    from pyclimate.svdeofs import svdeofs, getvariancefraction
     pcs, lambdas, eofs = svdeofs(U)
 
     return pcs, lambdas, eofs
@@ -77,7 +79,6 @@ class CEOF_2D(UserDict):
 	print "Considering the first %s of %s modes." % (nmodes,len(lambdas))
 
         # ---- Normalize -----------------------------------------------------
-        from utils import scaleEOF
         if 'normalize' in  self.cfg:
             pcs, eofs = scaleEOF(pcs, eofs, scaletype=self.cfg['normalize'])
 
