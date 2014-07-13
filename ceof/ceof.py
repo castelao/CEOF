@@ -58,17 +58,10 @@ class CEOF_2D(UserDict):
 
     def go(self):
         # ---- Creating the complex field using Hilbert transform
-        input_H = ma.masked_all(self['input'].shape)
-        #input_H = numpy.zeros(self['input'].shape,dtype=self['input'].dtype)
-        import scipy.fftpack
-        for i in range(self['input'].shape[1]):
-            input_H[:,i] = scipy.fftpack.hilbert(self['input'][:,i])
-        U = self['input'] + 1j*input_H
-        if U.mask.any():
-            print "There are masked values in U at CEOF_2D()"
+        #if self['input'].mask.any():
+        #    print "There are masked values in U at CEOF_2D()"
 
-        from pyclimate.svdeofs import svdeofs, getvariancefraction
-        pcs, lambdas, eofs = svdeofs(U.data)
+        pcs, lambdas, eofs = ceof_scalar2D(self['input'])
 
         # Define how many modes will be returned by the explainned variance.
         # cumvar = 1 means 100%, i.e. all modes
