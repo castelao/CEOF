@@ -86,28 +86,6 @@ class CEOF_2D(UserDict):
         self.data['lambdas'] = lambdas[:nmodes]
         self.data['variancefraction'] = getvariancefraction(lambdas)[:nmodes]
 
-        return
-
-def ceof_reconstruct(eofs, pcs, modes):
-    """
-    """
-    if modes == 'all':
-        modes = range(pcs.shape[1])
-    elif type(modes) == int:
-        modes = range(modes)
-    print "Reconstructing from EOF using the modes: %s" % modes
-    T = pcs.shape[0]
-    eof_amp=(eofs.real**2+eofs.imag**2)**0.5
-    eof_phase=numpy.arctan2(eofs.imag,eofs.real)
-    pc_amp = (numpy.real(pcs)**2+numpy.imag(pcs)**2)**0.5
-    pc_phase = numpy.arctan2(numpy.imag(pcs),numpy.real(pcs))	
-
-    data = ma.zeros((T,eofs.shape[0],eofs.shape[1]))
-    for t in range(T):
-        for n in modes:
-            data[t] = data[t] + eof_amp[:,:,n]*pc_amp[t,n]*numpy.cos(eof_phase[:,:,n]+pc_phase[t,n])
-    return data
-
 def make_animation(data, eofdata, t, lat, lon, outputfilename, limits = None):
     import matplotlib
     matplotlib.use('Agg')
