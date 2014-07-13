@@ -1,20 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import numpy as np
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 
-def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
+def plot(eof, pc, nmode, varfrac, filename, data, limits=None, cumvarfrac=None):
     """ Plot one mode of the CEOF
     """
     import pylab
     import matplotlib
 
     if limits == None:
-        LatIni = self['Lat'].min()
-        LatFin = self['Lat'].max()
-        LonIni = self['Lon'].min()
-        LonFin = self['Lon'].max()
+        #LatIni = self['Lat'].min()
+        #LatFin = self['Lat'].max()
+        #LonIni = self['Lon'].min()
+        #LonFin = self['Lon'].max()
+        pass
     else:
         LatIni = limits['LatIni']
         LatFin = limits['LatFin']
@@ -77,8 +80,8 @@ def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
 
     # ----
 
-    parallels = numpy.arange(-5,20.1,5)
-    meridians = numpy.arange(300,340,10)
+    parallels = np.arange(-5,20.1,5)
+    meridians = np.arange(300,340,10)
 
     margin=0.08
     left=margin
@@ -90,9 +93,9 @@ def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
     width_pc = (1-2*margin)*1
     # ----
     eof_amp=(eof.real**2+eof.imag**2)**0.5
-    eof_phase=numpy.arctan2(eof.imag,eof.real)
-    pc_amp = (numpy.real(pc)**2+numpy.imag(pc)**2)**0.5
-    pc_phase = numpy.arctan2(numpy.imag(pc),numpy.real(pc))
+    eof_phase=np.arctan2(eof.imag,eof.real)
+    pc_amp = (np.real(pc)**2+np.imag(pc)**2)**0.5
+    pc_phase = np.arctan2(np.imag(pc),np.real(pc))
 
     fig = pylab.figure(figsize=(14,10.5), dpi=300)
     cumvarfrac = None
@@ -102,18 +105,20 @@ def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
         title = "Mode: %i (%i%%)" % (nmode,varfrac*1e2)
 
     #if 'halfpower_period' in self:
-    if 'prefilter' in self.metadata:
-        if type(self.halfpower_period) == str:
-            halfpower_period = self.halfpower_period
-        else:
-            halfpower_period = round(self.halfpower_period)
-        title = "%s (%s half power:%s days)" % (title,self.metadata['prefilter']['type'], halfpower_period)
+    #if 'prefilter' in self.metadata:
+    #    if type(self.halfpower_period) == str:
+    #        halfpower_period = self.halfpower_period
+    #    else:
+    #        halfpower_period = round(self.halfpower_period)
+    #    title = "%s (%s half power:%s days)" % (title,self.metadata['prefilter']['type'], halfpower_period)
     fig.text(.5, .95, title, horizontalalignment='center',fontsize=16)
     #
     pylab.axes([left, bottom + 2*height_pc + 2*margin, width_eof, height_eof])
-    map = Basemap(projection='merc',lat_ts=0,llcrnrlon=LonIni,llcrnrlat=LatIni, urcrnrlon=LonFin, urcrnrlat=LatFin,resolution='l',area_thresh=1000.)
-    X, Y = map(*pylab.meshgrid(self.data['lon'],self.data['lat']))
-    map.contourf(X,Y,eof_amp*1e2)
+    map = Basemap(projection='merc', lat_ts=0, llcrnrlon=LonIni,
+            llcrnrlat=LatIni, urcrnrlon=LonFin, urcrnrlat=LatFin,
+            resolution='l', area_thresh=1000.)
+    X, Y = map(*pylab.meshgrid(data['lon'], data['lat']))
+    map.contourf(X, Y, eof_amp*1e2)
     pylab.title("CEOF amplitude")
     cbar = pylab.colorbar()
     cbar.set_label('[cm]')
@@ -124,20 +129,20 @@ def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
 
     pylab.axes([left+width_eof+margin, bottom + 2*height_pc + 2*margin, width_eof, height_eof])
     map = Basemap(projection='merc',lat_ts=0,llcrnrlon=LonIni,llcrnrlat=LatIni, urcrnrlon=LonFin, urcrnrlat=LatFin,resolution='l',area_thresh=1000.)
-    X, Y = map(*pylab.meshgrid(self.data['lon'],self.data['lat']))
+    X, Y = map(*pylab.meshgrid(data['lon'],data['lat']))
     V=[-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180]
     #V = range(-180,181,20)
     #import matplotlib.cm as cm
-    #map.pcolor(X[0,:],Y[:,0],eof_phase*180/numpy.pi,cmap=um_sym_cmap)
-    #map.contourf(X,Y,eof_phase*180/numpy.pi,V,cmap=um_sym_cmap)
+    #map.pcolor(X[0,:],Y[:,0],eof_phase*180/np.pi,cmap=um_sym_cmap)
+    #map.contourf(X,Y,eof_phase*180/np.pi,V,cmap=um_sym_cmap)
     #from scipy.stats import scoreatpercentile
     #scoreatpercentile(x.flatten(),15)
 
     from numpy import ma
     #ind_sig = eof_amp<0.01
-    #eof_phase_deg = eof_phase*180/numpy.pi
-    map.contourf(X, Y, eof_phase*180/numpy.pi, V, cmap=grey_cmap)
-    map.contourf(X,Y,ma.masked_array(eof_phase*180/numpy.pi, mask=eof_amp<0.01),V,cmap=um_sym_cmap)
+    #eof_phase_deg = eof_phase*180/np.pi
+    map.contourf(X, Y, eof_phase*180/np.pi, V, cmap=grey_cmap)
+    map.contourf(X,Y,ma.masked_array(eof_phase*180/np.pi, mask=eof_amp<0.01),V,cmap=um_sym_cmap)
 
     cbar = pylab.colorbar()
     cbar.set_label('[degrees]')
@@ -149,7 +154,7 @@ def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
     # ----
     #pylab.subplot(2,2,2)
     pylab.axes([left, bottom+margin+height_pc, width_pc, height_pc])
-    pylab.plot_date(pylab.date2num(self.data['datetime']),pc_amp,'-')
+    pylab.plot_date(pylab.date2num(data['datetime']),pc_amp,'-')
     fig.autofmt_xdate()
     pylab.title("PC amplitude")
     pylab.ylabel('[dimensionless]')
@@ -157,7 +162,7 @@ def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
     # ----
     #pylab.subplot(2,2,4)
     pylab.axes([left, bottom, width_pc, height_pc])
-    pylab.plot_date(pylab.date2num(self.data['datetime']),pc_phase*180/numpy.pi,'.')
+    pylab.plot_date(pylab.date2num(data['datetime']),pc_phase*180/np.pi,'.')
     fig.autofmt_xdate()
     v = pylab.axis()
     pylab.axis((v[0],v[1],-181,181))
@@ -167,7 +172,7 @@ def plot(eof, pc, nmode, varfrac, filename, limits=None, cumvarfrac=None):
     # ----
     #pylab.subplot(2,2,4)
     #pylab.axes([left + margin + width_l, bottom, width_r, height_r])
-    #pylab.plot(numpy.absolute(scipy.fftpack.fft(pc_amp))[1:pc_amp.shape[0]/2])
+    #pylab.plot(np.absolute(scipy.fftpack.fft(pc_amp))[1:pc_amp.shape[0]/2])
     #pylab.title("PC FFT")
     #pylab.grid()
     # ----
