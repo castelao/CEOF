@@ -33,7 +33,7 @@ def ceof_scalar2D(data):
     from pyclimate.svdeofs import svdeofs, getvariancefraction
     pcs, lambdas, eofs = svdeofs(U)
 
-    return {'pcs': pcs, 'lambdas': lambdas, 'eofs': eofs}
+    return pcs, lambdas, eofs
 
 
 class CEOF_2D(UserDict):
