@@ -10,7 +10,7 @@ from numpy import ma
 from UserDict import UserDict
 
 
-def ceof2D(data):
+def ceof_scalar2D(data):
     """ Estimate the complex EOF on a 2D array.
 
         Time should be the first dimension, so that the PC (eigenvalues) will
@@ -18,9 +18,9 @@ def ceof2D(data):
 
     """
     assert type(data) is np.ndarray, \
-        "ceof2D requires an ndarray but got: %s" % type(data)
+        "ceof_scalar2D requires an ndarray but got: %s" % type(data)
     assert np.isfinite(data).all(), \
-        "ceof2D requires a full valid values array"
+        "ceof_scalar2D requires a full valid values array"
 
     # ---- Creating the complex field using Hilbert transform
     input_H = numpy.empty(data.shape, dtype=data.dtype)
