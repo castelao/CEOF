@@ -42,11 +42,8 @@ class CEOF_2D(UserDict):
     """ Complex EOF of a scalar 2D array
     """
     def __init__(self, input, cfg={}):
-        # ---- Checks ----
-        if len(input.shape) != 2:
-            print "The input should be a 2D array, ready to run the EOF"
-            return
-        # ----------------
+        assert input.ndim == 2, "CEOF_2D requires a 2D ndarray input"
+
         self.input = input.copy()
         self.data = {'input': input.copy()}
         if cfg == {}:
