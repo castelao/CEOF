@@ -428,14 +428,9 @@ class CEOF(UserDict):
         # ---- Normalize -----------------------------------------------------
         #self.data['ssh']=self.data['ssh']-self.data['ssh'].mean()
         # --------------------------------------------------------------------
-        # Damn ugly way to resolve it, but will work for now.
-        import re
+        ind = ma.getmaskarray(self.data[var]).any(axis=0) == False
+
         I, J, K = self.data[var].shape
-        ind = numpy.ones((J,K)) == 1
-        #tmp=numpy.ones((J,K))==1
-        for j in range(J):
-            for k in range(K):
-                ind[j, k] = ((self.data[var].mask)[:, j, k]).all() == False
     
         if 'ceof_coord' in self.metadata:
             coord = self.metadata['ceof_coord']
