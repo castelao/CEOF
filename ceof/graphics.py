@@ -3,6 +3,7 @@
 
 import numpy as np
 
+from matplotlib import cm
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 
@@ -92,10 +93,10 @@ def plot(eof, pc, nmode, varfrac, filename, data, limits=None, cumvarfrac=None):
     height_pc = (1-4*margin)*.28
     width_pc = (1-2*margin)*1
     # ----
-    eof_amp=(eof.real**2+eof.imag**2)**0.5
-    eof_phase=np.arctan2(eof.imag,eof.real)
-    pc_amp = (np.real(pc)**2+np.imag(pc)**2)**0.5
-    pc_phase = np.arctan2(np.imag(pc),np.real(pc))
+    eof_amp = (eof.real**2 + eof.imag**2)**0.5
+    eof_phase = np.arctan2(eof.imag, eof.real)
+    pc_amp = (np.real(pc)**2 + np.imag(pc)**2)**0.5
+    pc_phase = np.arctan2(np.imag(pc), np.real(pc))
 
     fig = pylab.figure(figsize=(14,10.5), dpi=300)
     cumvarfrac = None
@@ -118,7 +119,7 @@ def plot(eof, pc, nmode, varfrac, filename, data, limits=None, cumvarfrac=None):
             llcrnrlat=LatIni, urcrnrlon=LonFin, urcrnrlat=LatFin,
             resolution='l', area_thresh=1000.)
     X, Y = map(*pylab.meshgrid(data['lon'], data['lat']))
-    map.contourf(X, Y, eof_amp*1e2)
+    map.contourf(X, Y, eof_amp*1e2, cmap = cm.RdBu_r)
     pylab.title("CEOF amplitude")
     cbar = pylab.colorbar()
     cbar.set_label('[cm]')
