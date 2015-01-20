@@ -1,5 +1,11 @@
+
+from datetime import datetime, timedelta
+
 import numpy as np
 from numpy import ma
+
+import netCDF4
+from netCDF4 import date2num
 
 def scaleEOF(pcs, eofs, scaletype):
     """ Scale the EOFS and PCS preserving the mode
@@ -182,3 +188,67 @@ def wavelenght_from_ceof(ceof, latitude, longitude):
     #pylab.show()
 
     return L_x
+
+
+def save_ceof(data, outputfile, nmodes=None):
+    """ Save the output from CEOF analylis into a netCDF file
+    """
+    print("Saving CEOF results into %s" % outputfile)
+
+    if nmodes is None:
+        nmodes = data['datetime'].size
+
+    ncout = netCDF4.Dataset(outputfile, 'w')
+
+    ncout.createDimension('time', data['datetime'].size)
+    ncout.createDimension('nmodes', nmodes)
+    ncout.createDimension('longitude', data['longitude'].size)
+    ncout.createDimension('latitude', data['latitude'].size)
+
+    output = {}
+    dmin = data['datetime'].min()
+
+    output['time'] = ncout.createVariable('time', 'f4', ('time',),
+            fill_value=netCDF4.default_fillvals['f4'])
+    output['time'].units = "hours since %s" % \
+            datetime.strftime(data['datetime'].min(),
+                    "%Y-%m-%d %H:%M:%S")
+    output['time'][:] = date2num(data['datetime'], \
+            output['time'].units)
+    output['latitude'] = ncout.createVariable('latitude',
+            'f4', ('latitude',),
+            fill_value=netCDF4.default_fillvals['f4'])
+    output['latitude'][:] = data['latitude']
+    output['longitude'] = ncout.createVariable('longitude',
+            'f4', ('longitude',),
+            fill_value=netCDF4.default_fillvals['f4'])
+    output['longitude'][:] = data['longitude']
+
+    output['lambdas'] = ncout.createVariable('lambdas',
+            'f4', ('nmodes',),
+            fill_value=netCDF4.default_fillvals['f4'])
+    output['lambdas'][:] = data['lambdas']
+    output['variancefraction'] = ncout.createVariable('variancefraction',
+            'f4', ('nmodes',),
+            fill_value=netCDF4.default_fillvals['f4'])
+    output['variancefraction'][:] = data['variancefraction']
+
+    output['pcs_real'] = ncout.createVariable('pcs_real',
+            'f8', ('time', 'nmodes'),
+            fill_value=netCDF4.default_fillvals['f8'])
+    output['pcs_real'][:] = data['pcs'].real
+    output['pcs_imag'] = ncout.createVariable('pcs_imag',
+            'f8', ('time', 'nmodes'),
+            fill_value=netCDF4.default_fillvals['f8'])
+    output['pcs_imag'][:] = data['pcs'].imag
+
+    output['ceof_real'] = ncout.createVariable('ceof_real',
+            'f8', ('nmodes', 'latitude', 'longitude'),
+            fill_value=netCDF4.default_fillvals['f8'])
+    output['ceof_real'][:] = data['eofs'].real
+    output['ceof_imag'] = ncout.createVariable('ceof_imag',
+            'f8', ('nmodes', 'latitude', 'longitude'),
+            fill_value=netCDF4.default_fillvals['f8'])
+    output['ceof_imag'][:] = data['eofs'].imag
+
+    ncout.close()
