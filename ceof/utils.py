@@ -1,4 +1,5 @@
 import numpy as np
+from numpy import ma
 
 def scaleEOF(pcs, eofs, scaletype):
     """ Scale the EOFS and PCS preserving the mode
@@ -123,3 +124,57 @@ def gridto2D(self, var, ind=None):
                 self.data2D['lon'][n] = self.data['Lon'][j,k]
                 self.data2D[var][:,n] = self.data[var][:,j,k]
     return
+
+
+def wavelenght_from_ceof(ceof, latitude, longitude):
+    """ Estimate the wavelenghts from the gradient of the EOF
+
+    """
+    assert (latitude.ndim == 1) & (longitude.ndim == 1)
+
+    eof_phase = np.arctan2(ceof.imag, ceof.real)
+
+    # Estimate the delta_x of phase
+    eof_phase_360 = eof_phase.copy()
+    eof_phase_360[eof_phase<0] = 2*np.pi+eof_phase[eof_phase<0]
+
+    #from fluid.common.common import _diff_centred
+    #dx_eof_phase = _diff_centred(eof_phase, dim=1)
+    #dx_eof_phase_360 = _diff_centred(eof_phase_360, dim=1)
+    dy, dx_eof_phase, dm = np.gradient(eof_phase)
+    dy, dx_eof_phase_360, dm = np.gradient(eof_phase_360)
+    del(dy)
+    del(dm)
+
+    ind = abs(dx_eof_phase)>abs(dx_eof_phase_360)
+    dx_eof_phase[ind] = dx_eof_phase_360[ind]
+    del(dx_eof_phase_360)
+
+    #data['dx_eof_phase'] = dx_eof_phase
+
+    #from scipy.interpolate import bisplrep, bisplev
+    #tck = bisplrep(x['Lon'], x['Lat'], eof_phase)
+    #dx_eof_phase_spline = bisplev(x['Lon'][0,:], x['Lat'][:,0],tck,dx=1)#/self.data['dX']
+
+    from fluid.common.common import lonlat2dxdy
+    #dX, dY = lonlat2dxdy( x['Lon'][0,:], self['Lat'][:,0])
+    dX, dY = lonlat2dxdy(longitude, latitude)
+
+    L_x = ma.masked_all(dx_eof_phase.shape)
+    for n in range(dx_eof_phase.shape[2]):
+        L_x[:,:,n] = dX/dx_eof_phase[:,:,n]*2*np.pi*1e-3
+
+    L_x = dX[:,:,None]/dx_eof_phase*2*np.pi*1e-3
+    #self.data['L_x'] = dX/dx_eof_phase*2*np.pi*1e-3
+    #self.data['L_x'] = L_x
+
+    #from fluid.common.common import _diff_centred
+    #eof_phase=np.arctan2(x['eofs'].imag,x['eofs'].real)
+    #deof_x=_diff_centred(eof_phase,dim=1)
+    #pylab.contourf(eof_phase[:,:,0])
+    #pylab.figure()
+    #pylab.contourf(deof_x[:,:,0],np.linspace(-0.5,0.5,20))
+    #pylab.colorbar()
+    #pylab.show()
+
+    return L_x
