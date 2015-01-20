@@ -424,15 +424,6 @@ class CEOF(UserDict):
                 if ind[j, k]:
                     n += 1
                     grid_index[n, :] = [j, k]
-        #else:
-        #    #N = ((numpy.ones(ind.shape)[ind]).sum())
-	#    N = J*K
-        #    grid_index = ma.masked_all((N,2),dtype='i')
-        #    n=-1
-        #    for j in range(J):
-        #        for k in range(K):
-        #            n+=1
-        #            grid_index[n,:] = [j,k]
     
         self.grid_index = grid_index
         data2D = numpy.zeros((I,N), dtype=self.data[var].dtype)
