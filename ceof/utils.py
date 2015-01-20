@@ -134,9 +134,11 @@ def wavelenght_from_ceof(ceof, latitude, longitude):
 
     eof_phase = np.arctan2(ceof.imag, ceof.real)
 
-    # Estimate the delta_x of phase
+    # ------------------------------------------------------------------------
+    # Estimate the delta_x of phase using [-180:180] and [0:360],
+    #   than use the smallest dx. This avoids the 2 pi jumps.
     eof_phase_360 = eof_phase.copy()
-    eof_phase_360[eof_phase<0] = 2*np.pi+eof_phase[eof_phase<0]
+    eof_phase_360[eof_phase<0] = 2*np.pi + eof_phase[eof_phase<0]
 
     #from fluid.common.common import _diff_centred
     #dx_eof_phase = _diff_centred(eof_phase, dim=1)
@@ -150,6 +152,8 @@ def wavelenght_from_ceof(ceof, latitude, longitude):
     dx_eof_phase[ind] = dx_eof_phase_360[ind]
     del(dx_eof_phase_360)
 
+    # ------------------------------------------------------------------------
+
     #data['dx_eof_phase'] = dx_eof_phase
 
     #from scipy.interpolate import bisplrep, bisplev
@@ -160,9 +164,9 @@ def wavelenght_from_ceof(ceof, latitude, longitude):
     #dX, dY = lonlat2dxdy( x['Lon'][0,:], self['Lat'][:,0])
     dX, dY = lonlat2dxdy(longitude, latitude)
 
-    L_x = ma.masked_all(dx_eof_phase.shape)
-    for n in range(dx_eof_phase.shape[2]):
-        L_x[:,:,n] = dX/dx_eof_phase[:,:,n]*2*np.pi*1e-3
+    #L_x = ma.masked_all(dx_eof_phase.shape)
+    #for n in range(dx_eof_phase.shape[2]):
+    #    L_x[:,:,n] = dX/dx_eof_phase[:,:,n]*2*np.pi*1e-3
 
     L_x = dX[:,:,None]/dx_eof_phase*2*np.pi*1e-3
     #self.data['L_x'] = dX/dx_eof_phase*2*np.pi*1e-3

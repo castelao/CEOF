@@ -334,55 +334,6 @@ class CEOF(UserDict):
         return ind
 
 
-
-    def set_wavelenght(self):
-        """ Estimate the wavelenghts from the gradient of the EOF
-
-
-	"""
-
-        eof_phase=numpy.arctan2(self['eofs'].imag, self['eofs'].real)
-
-        eof_phase_360 = eof_phase.copy()
-        eof_phase_360[eof_phase<0] = 2*numpy.pi+eof_phase[eof_phase<0]
-
-        from fluid.common.common import _diff_centred
-        dx_eof_phase = _diff_centred(eof_phase,dim=1)
-        dx_eof_phase_360 = _diff_centred(eof_phase_360, dim=1)
-
-        ind = abs(dx_eof_phase)>abs(dx_eof_phase_360)
-        dx_eof_phase[ind] = dx_eof_phase_360[ind]
-
-	self.data['dx_eof_phase'] = dx_eof_phase
-
-        #from scipy.interpolate import bisplrep, bisplev
-        #tck = bisplrep(x['Lon'], x['Lat'], eof_phase)
-        #dx_eof_phase_spline = bisplev(x['Lon'][0,:], x['Lat'][:,0],tck,dx=1)#/self.data['dX']
-
-        from fluid.common.common import lonlat2dxdy
-        #dX, dY = lonlat2dxdy( x['Lon'][0,:], self['Lat'][:,0])
-        dX, dY = lonlat2dxdy( self['lon'], self['lat'])
-
-        L_x = ma.masked_all(dx_eof_phase.shape)
-	for n in range(dx_eof_phase.shape[-1]):
-	    L_x[:,:,n] = dX/dx_eof_phase[:,:,n]*2*numpy.pi*1e-3
-
-        #self.data['L_x'] = dX/dx_eof_phase*2*numpy.pi*1e-3
-        self.data['L_x'] = L_x
-
-
-        #from fluid.common.common import _diff_centred
-        #eof_phase=numpy.arctan2(x['eofs'].imag,x['eofs'].real)
-        #deof_x=_diff_centred(eof_phase,dim=1)
-        #pylab.contourf(eof_phase[:,:,0])
-        #pylab.figure()
-        #pylab.contourf(deof_x[:,:,0],numpy.linspace(-0.5,0.5,20))
-        #pylab.colorbar()
-        #pylab.show()
-
-        return
-
-
     def go(self):
         var = self.metadata['ceof']['var']
 
