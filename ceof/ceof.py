@@ -416,7 +416,7 @@ class CEOF(UserDict):
   
         #ind = ind&tmp
     
-        N = ((numpy.ones(ind.shape)[ind]).sum())
+        N = int((numpy.ones(ind.shape)[ind]).sum())
         grid_index = ma.masked_all((N,2), dtype='i')
         n = -1
         for j in range(J):
