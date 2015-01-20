@@ -92,3 +92,34 @@ def ceof_reconstruct(eofs, pcs, nmodes=None):
                     numpy.cos(eof_phase[:,:,n] + pc_phase[t,n])
 
     return data
+
+
+def gridto2D(self, var, ind=None):
+    """
+    """
+    I, J, K = self.data[var].shape
+
+    if ind == None:
+        ind = numpy.ones((J,K))==1
+
+    N = ((numpy.ones(ind.shape)[ind]).sum())
+
+    self.data2D = {}
+    for k in ['lat','lon']:
+        self.data2D[k] = ma.masked_all(N, dtype=self.data[k].dtype)
+
+    self.data2D['grid_index'] = ma.masked_all((N, 2))
+
+    for k in [var]:
+        self.data2D[k] = ma.masked_all((I,N), dtype=self.data[k].dtype)
+
+    n=-1
+    for j in range(J):
+        for k in range(K):
+            if ind[j, k]:
+                n += 1
+                self.data2D['grid_index'][n] = numpy.array([j,k])
+                self.data2D['lat'][n] = self.data['Lat'][j,k]
+                self.data2D['lon'][n] = self.data['Lon'][j,k]
+                self.data2D[var][:,n] = self.data[var][:,j,k]
+    return
