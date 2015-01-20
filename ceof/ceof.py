@@ -399,29 +399,7 @@ class CEOF(UserDict):
 
         if 'figs' in self.metadata:
 	    print "Creating figures for %s modes" % nmodes
-            #for nmode in range(5):
-            #for n in range(10):
             for n in range(nmodes):
-                #eof2D=ceof['eofs'][:,nmode]
-                #pc2D=ceof['pcs'][:,nmode]
-                ##
-                ##eof=ma.masked_all(self.data['ssh'].shape[1:],dtype=eofs.dtype)
-                #eof=ma.masked_all(self.data['ssh'].shape[1:],dtype='complex128')
-                ##pc=ma.masked_all(self.data['ssh'].shape[1:],dtype=pcs.dtype)
-                #pc=ma.masked_all(self.data['ssh'].shape[1:],dtype='complex128')
-                ##
-                ##for n,i in enumerate(ind):
-                ##
-                ## ---- 2D back to grid ----
-                #for n,ind in enumerate(self.data2D['grid_index']):
-                #    #print n,ind
-                #    eof[ind[0],ind[1]] = eof2D[n]
-                #    #pc[ind[0],ind[1]] = pc2D[n]
-                #pc = pc2D
-                #print pc2D.shape
-                #varfrac = round(getvariancefraction(lambdas)[nmode]*1e2)
-                #varfrac = ceof['variancefraction'][nmode]
-                #fig = self.plot(eof_amp,eof_phase,pc_amp,pc_phase,nmode,varfrac)
                 if 'suffix' in self.metadata['figs']:
                     filename="../figs/CEOF_%s_mode%s.eps" % (self.metadata['figs']['suffix'],(n+1))
                 else:
@@ -435,15 +413,6 @@ class CEOF(UserDict):
                         data = self.data,
                         limits=limits,
                         cumvarfrac=self['variancefraction'][:(n+1)].sum())
-                #fig.show()
-
-                #import pylab
-                #pylab.savefig("../fig/CEOF_mode%s.eps" % nmode)
-                ##print "dir(fig)",dir(fig)
-                ##fig.close()
-                #pylab.close()
-
-
 
         # --------------------------------------------------------------------
         #y=x['eofs'][:,:,0]
