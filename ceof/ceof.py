@@ -15,6 +15,7 @@ from pyclimate.svdeofs import svdeofs, getvariancefraction
 
 from utils import scaleEOF
 
+
 def ceof_scalar2D(data):
     """ Estimate the complex EOF on a 2D array.
 
@@ -39,51 +40,48 @@ def ceof_scalar2D(data):
     return pcs, lambdas, eofs
 
 
-class CEOF_2D(UserDict):
+def CEOF_2D(data, cfg=None):
     """ Complex EOF of a scalar 2D array
     """
-    def __init__(self, input, cfg={}):
-        assert input.ndim == 2, "CEOF_2D requires a 2D ndarray input"
+    assert data.ndim == 2, "CEOF_2D requires a 2D ndarray input"
 
-        self.input = input.copy()
-        self.data = {'input': input.copy()}
-        if cfg == {}:
-            self.cfg = {'cumvar':1,'normalize':'pc_median'}
-        else:
-            self.cfg = cfg
+    if cfg is None:
+        cfg = {'cumvar':1, 'normalize':'pc_median'}
+    assert type(cfg) is dict, "cfg must be a dictionary"
 
-        self.go()
+    # ---- Creating the complex field using Hilbert transform
+    #if self['input'].mask.any():
+    #    print "There are masked values in U at CEOF_2D()"
 
-        return
+    pcs, lambdas, eofs = ceof_scalar2D(data)
 
-    def go(self):
-        # ---- Creating the complex field using Hilbert transform
-        #if self['input'].mask.any():
-        #    print "There are masked values in U at CEOF_2D()"
+    expvar = getvariancefraction(lambdas)
 
-        pcs, lambdas, eofs = ceof_scalar2D(self['input'])
+    # Define how many modes will be returned by the explainned variance.
+    # cumvar = 1 means 100%, i.e. all modes
+    if cfg['cumvar'] == 1:
+        nmodes = len(lambdas)
+    else:
+        # This doesn't work. Need to improve it.
+        nmodes = (np.arange(len(expvar))[np.cumsum(expvar)>=cfg['cumvar']])[0]
 
-        # Define how many modes will be returned by the explainned variance.
-        # cumvar = 1 means 100%, i.e. all modes
-        if self.cfg['cumvar'] == 1:
-            nmodes = len(lambdas)
-        else:
-	    # This don't work. Need to improve it.
-            nmodes = (numpy.arange(len(lambdas))[numpy.cumsum(getvariancefraction(lambdas))>=self.cfg['cumvar']])[0]
-	
-	if 'maxnmodes' in self.cfg:
-	    nmodes = min(nmodes,self.cfg['maxnmodes'])
+    if 'maxnmodes' in cfg:
+        nmodes = min(nmodes, cfg['maxnmodes'])
 
-	print "Considering the first %s of %s modes." % (nmodes,len(lambdas))
+    print "Considering the first %s of %s modes." % (nmodes,len(lambdas))
 
-        # ---- Normalize -----------------------------------------------------
-        if 'normalize' in  self.cfg:
-            pcs, eofs = scaleEOF(pcs, eofs, scaletype=self.cfg['normalize'])
+    # ---- Normalize -----------------------------------------------------
+    if 'normalize' in  cfg:
+        pcs, eofs = scaleEOF(pcs, eofs, scaletype=cfg['normalize'])
 
-        self.data['eofs'] = eofs[:,:nmodes]
-        self.data['pcs'] = pcs[:,:nmodes]
-        self.data['lambdas'] = lambdas[:nmodes]
-        self.data['variancefraction'] = getvariancefraction(lambdas)[:nmodes]
+    output = {}
+    output['eofs'] = eofs[:,:nmodes]
+    output['pcs'] = pcs[:,:nmodes]
+    output['lambdas'] = lambdas[:nmodes]
+    output['variancefraction'] = expvar[:nmodes]
+
+    return output
+
 
 def make_animation(data, eofdata, t, lat, lon, outputfilename, limits = None):
     import matplotlib
@@ -431,25 +429,16 @@ class CEOF(UserDict):
             data2D[:, n] = self.data[var][:,ind[0], ind[1]]
 
         print "Running CEOF_2D()"
-        #metadata = {'cumvar':1,'normalize':'pc_std'}
-        #ceof = CEOF_2D(self.data2D['ssh'],metadata=metadata)
-        ceof = CEOF_2D(data2D, cfg=self.metadata['ceof'])
+        output = CEOF_2D(data2D, cfg=self.metadata['ceof'])
 
-        #for k in ceof.keys():
-        #    print k, ceof[k].shape, type(ceof[k])
+        nmodes = len(output['lambdas'])
 
-        nmodes=len(ceof['lambdas'])
+        for k in [k for k in output.keys() if k is not 'ceof']:
+            self.data[k] = output[k]
 
-        #print dir(ceof['eofs'])
-        #print ceof['eofs'].dtype
-
-        self.data['variancefraction'] = ceof['variancefraction']
-        self.data['lambdas'] = ceof['lambdas']
-        self.data['pcs'] = ceof['pcs']
-        #self.data['eofs'] = ma.masked_all((J,K,nmodes),dtype=ceof['eofs'].dtype)
-        self.data['eofs'] = ma.masked_all((J,K,nmodes),dtype='complex128')
+        self.data['eofs'] = ma.masked_all((J, K, nmodes), dtype='complex128')
         for n,ind in enumerate(self.grid_index):
-            self.data['eofs'][ind[0],ind[1],:] = ceof['eofs'][n,:]
+            self.data['eofs'][ind[0],ind[1],:] = output['eofs'][n,:]
 
 	# ----
 	self.set_wavelenght()
