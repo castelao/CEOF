@@ -4,10 +4,12 @@
 """ Class to deal with Complex EOF
 """
 
+from UserDict import UserDict
+
 import numpy
 import numpy as np
 from numpy import ma
-from UserDict import UserDict
+import scipy.fftpack
 
 from pyclimate.svdeofs import svdeofs, getvariancefraction
 
@@ -27,7 +29,6 @@ def ceof_scalar2D(data):
 
     # ---- Creating the complex field using Hilbert transform
     input_H = numpy.empty(data.shape, dtype=data.dtype)
-    import scipy.fftpack
     for i in range(data.shape[1]):
         input_H[:,i] = scipy.fftpack.hilbert(data[:,i])
 
