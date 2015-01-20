@@ -58,7 +58,7 @@ def scaleEOF(pcs, eofs, scaletype):
     return pcs, eofs
 
 
-def ceof_reconstruct(eofs, pcs, nmodes='all'):
+def ceof_reconstruct(eofs, pcs, nmodes=None):
     """ Reconstruct the dataset from the sum of eofs*pcs
 
         If modes is 'all', uses all modes to reconstruct, otherwise it
@@ -66,10 +66,10 @@ def ceof_reconstruct(eofs, pcs, nmodes='all'):
     """
     assert eofs.shape[-1] == pcs.shape[-1], \
             "Last dimension of eofs must be equal to last dimension of pcs."
-    assert (nmodes == 'all') or (type(nmodes) == int), \
+    assert (nmodes == None) or (type(nmodes) == int), \
             "Valid values for modes are: 'all' or an integer."
 
-    if nmodes == 'all':
+    if nmodes is None:
         nmodes = range(pcs.shape[-1])
     else:
         nmodes = range(nmodes)
