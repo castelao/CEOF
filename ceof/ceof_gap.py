@@ -31,6 +31,27 @@ def eof_from_eig(x):
     return pcs, exp_var, eofs
 
 
+def eof_gap(x):
+    """ EOF decomposition that allows some gaps.
+
+        It's important to keep in mind that it assumes that the gaps does not
+          compromise the estimate of the covariance between the data series
+          of two positions.
+    """
+    R = cov2D_gap(x)
+    L, C = np.linalg.eig(R)
+    eofs = C.T
+
+    exp_var = L/L.sum()
+
+    nmodes = L.size
+    pcs = np.empty((x.shape[0], nmodes))
+    for n in range(nmodes):
+        pcs[:, n] = np.dot(x, C[:, n])
+
+    return pcs, exp_var, eofs
+
+
 def cov2D_gap(x):
     """ Covariance matrix allowing gaps
 
