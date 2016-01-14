@@ -1,16 +1,17 @@
 import numpy as np
 from scipy import signal
 
+
 def eof(data):
     """
     expects: data[time,positions]
 
     """
     data = signal.detrend(data, axis=0)
-    U, s, V = np.linalg.svd(data, full_matrices=False) # SVD analisys
-    S  = np.diag(s)
-    exp_var = s**2/np.sum(s**2) # explained variance of each mode for y1 
-    PC = np.dot(U,S) 
+    U, s, V = np.linalg.svd(data, full_matrices=False)  # SVD analisys
+    S = np.diag(s)
+    exp_var = s**2 / np.sum(s**2)  # explained variance of each mode for y1
+    PC = np.dot(U, S)
     return PC, exp_var, V
 
 
@@ -68,6 +69,6 @@ def cov2D_gap(x):
         for j in range(J):
             # FIXME: Double check if I should use mean or N*mean
             #   i.e. does it take the sum or the mean? I think it is the sum.
-            y[i, j] = N*(x[:,i] * x[:,j]).mean()
+            y[i, j] = N*(x[:, i] * x[:, j]).mean()
 
     return y
