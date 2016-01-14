@@ -7,13 +7,11 @@ def eof(data):
 
     """
     data = signal.detrend(data, axis=0)
-    U, s, V = np.linalg.svd(data, full_matrices=True) # SVD analisys
-    S = np.zeros((data).shape) # We need to complete with zeros
-    N = S.shape[0]
-    S[:N, :N] = np.diag(s)
+    U, s, V = np.linalg.svd(data, full_matrices=False) # SVD analisys
+    S  = np.diag(s)
     exp_var = s**2/np.sum(s**2) # explained variance of each mode for y1 
-    PC = np.dot(S,V) 
-    return PC, exp_var, U
+    PC = np.dot(U,S) 
+    return PC, exp_var, V
 
 def cov2D_gap(x):
     """ Covariance matrix allowing gaps
