@@ -19,3 +19,13 @@ def test_eof_shapes():
     assert p.shape == (10, 3)
     assert v.shape == (3,)
     assert e.shape == (3, 3)
+
+
+def test_eof_recons():
+    x = np.random.random((4,3))
+    p, v, e = eof(x)
+    y = np.zeros_like(x)
+    for n in v.size():
+        y += (p[:, n][:,None] * e[:, n])
+
+    assert np.all_close(x, y)
