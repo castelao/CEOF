@@ -30,8 +30,8 @@ def eof_from_eig(x):
     return pcs, exp_var, eofs
 
 
-def eof_gap(x):
-    """ EOF decomposition that allows some gaps.
+def eof2D_gap(x):
+    """ EOF decomposition of 2D array that allows some gaps.
 
         It's important to keep in mind that it assumes that the gaps does not
           compromise the estimate of the covariance between the data series
@@ -73,3 +73,27 @@ def cov2D_gap(x):
             y[i, j] = N*(x[:, i] * x[:, j]).mean()
 
     return y
+
+
+def eof_gap(x):
+    """ EOF decomposition of nD array that allows some gaps.
+
+        I'm not happy with this. Improve it at some point
+    """
+    x = np.asanyarray(x)
+
+    if x.ndim == 2:
+        return eof2D_gap(x)
+
+    # First reshape to 2D
+    S = x.shape
+    x = x.reshape(S[0], x.size/S[0])
+    pcs, exp_var, eofs = eof2D_gap(x)
+
+    # Remap into the original form. So EOF would have the same dimensions
+    #  of x, but without the first one that gone into pcs.
+    x = x.reshape(S)
+    nmodes = eofs.shape[-1]
+    eofs = eofs.reshape(list(S[1:]) + [nmodes])
+
+    return pcs, exp_var, eofs
