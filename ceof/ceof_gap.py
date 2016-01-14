@@ -46,6 +46,7 @@ def cov2D_gap(x):
     for i in range(J):
         for j in range(J):
             # FIXME: Double check if I should use mean or N*mean
-            y[i, j] = (x[:,i] * x[:,j]).mean()
+            #   i.e. does it take the sum or the mean? I think it is the sum.
+            y[i, j] = N*(x[:,i] * x[:,j]).mean()
 
     return y
