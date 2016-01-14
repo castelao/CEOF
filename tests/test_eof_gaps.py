@@ -34,7 +34,7 @@ def eof_reconstruct(x):
 
 def test_eof_recons():
     x = np.random.random((4,3))
-    assert np.all_close(x, eof_reconstruct(x))
+    assert np.allclose(x, eof_reconstruct(x))
 
     # FIXME: Create another test for this signal
     # y = np.sin(2 * pi * t)[:, None] + (0.1 * np.sin(2 * pi * t/2))[:, None] * x
