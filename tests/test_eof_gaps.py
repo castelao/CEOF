@@ -26,7 +26,7 @@ def eof_reconstruct(x):
     """
     p, v, e = eof(x)
     y = np.zeros_like(x)
-    for n in v.size():
+    for n in range(len(v)):
         y += (p[:, n][:,None] * e[:, n])
 
     return y

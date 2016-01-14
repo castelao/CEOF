@@ -11,7 +11,10 @@ import numpy as np
 from numpy import ma
 import scipy.fftpack
 
-from pyclimate.svdeofs import svdeofs, getvariancefraction
+try:
+    from pyclimate.svdeofs import svdeofs, getvariancefraction
+except:
+    print("pyclimate is not available!")
 
 from utils import scaleEOF
 
