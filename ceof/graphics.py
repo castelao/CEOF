@@ -3,15 +3,19 @@
 
 import numpy as np
 
-from matplotlib import cm
-import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
+try:
+    import pylab
+    import matplotlib
+    from matplotlib import cm
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.basemap import Basemap
+except:
+    print("Sorry, matplotlib is not available")
+
 
 def plot(eof, pc, nmode, varfrac, filename, data, limits=None, cumvarfrac=None):
     """ Plot one mode of the CEOF
     """
-    import pylab
-    import matplotlib
 
     if limits == None:
         #LatIni = self['Lat'].min()
