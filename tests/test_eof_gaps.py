@@ -12,10 +12,8 @@ def test_eof_shapes():
     assert v.shape == (3,)
     assert e.shape == (3, 3)
 
-    # Let's suppose 3 sensors with a time series of 10 measurements
     x = np.random.random((10, 3))
     p, v, e = eof(x)
-    # It should return 3 modes
     assert p.shape == (10, 3)
     assert v.shape == (3,)
     assert e.shape == (3, 3)
