@@ -13,6 +13,24 @@ def eof(data):
     PC = np.dot(U,S) 
     return PC, exp_var, V
 
+
+def eof_from_eig(x):
+    """ Didatic eof decomposition using eig()
+    """
+    R = np.dot(x.T, x)
+    L, C = np.linalg.eig(R)
+    eofs = C.T
+
+    exp_var = L/L.sum()
+
+    nmodes = L.size
+    pcs = np.empty((x.shape[0], nmodes))
+    for n in range(nmodes):
+        pcs[:, n] = np.dot(x, C[:, n])
+
+    return pcs, exp_var, eofs
+
+
 def cov2D_gap(x):
     """ Covariance matrix allowing gaps
 
