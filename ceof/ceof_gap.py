@@ -13,7 +13,7 @@ def eof(data):
     S[:N, :N] = np.diag(s)
     exp_var = s**2/np.sum(s**2) # explained variance of each mode for y1 
     PC = np.dot(S,V) 
-    return PC, exp_var, U[:,0]
+    return PC, exp_var, U
 
 def cov2D_gap(x):
     """ Covariance matrix allowing gaps
