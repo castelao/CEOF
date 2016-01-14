@@ -1,5 +1,4 @@
 import numpy as np
-from scipy import signal
 
 
 def eof(data):
@@ -7,7 +6,6 @@ def eof(data):
     expects: data[time,positions]
 
     """
-    data = signal.detrend(data, axis=0)
     U, s, V = np.linalg.svd(data, full_matrices=False)  # SVD analisys
     S = np.diag(s)
     exp_var = s**2 / np.sum(s**2)  # explained variance of each mode for y1
