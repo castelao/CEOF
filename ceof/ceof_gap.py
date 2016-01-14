@@ -56,6 +56,9 @@ def eof_gap(x):
 def cov2D_gap(x):
     """ Covariance matrix allowing gaps
 
+
+        ATENTION: Might be a good idea to set a constraint on max gaps
+          allowed, like at least 98% of the data?
     """
     x = np.asanyarray(x)
 
