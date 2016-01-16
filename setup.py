@@ -25,7 +25,7 @@ version_file = open(path.join(here, 'VERSION'))
 version = version_file.read().strip()
 
 setup(
-    name='pyCEOF',
+    name='CEOF',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
