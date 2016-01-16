@@ -11,10 +11,6 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-# Get the long description from the relevant file
-with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
-    long_description = f.read()
-
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
@@ -33,7 +29,7 @@ setup(
     version=version,
 
     description='Apply the Complex Empirical Orthogonal Function Analysis',
-    long_description=long_description,
+    long_description=readme + '\n\n' + history,
 
     # The project's main homepage.
     url='https://github.com/castelao/pyCEOF',
