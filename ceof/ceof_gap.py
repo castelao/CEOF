@@ -2,7 +2,7 @@ import numpy as np
 from numpy import ma
 
 
-def eof(data):
+def eof_from_svd(data):
     """
     expects: data[time,positions]
 
@@ -11,6 +11,7 @@ def eof(data):
     S = np.diag(s)
     exp_var = s**2 / np.sum(s**2)  # explained variance of each mode for y1
     PC = np.dot(U, S)
+
     return PC, exp_var, V.T
 
 
