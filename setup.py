@@ -5,6 +5,10 @@ from setuptools import setup, find_packages  # Always prefer setuptools over dis
 from codecs import open  # To use a consistent encoding
 from os import path
 
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 # Read and comply:
 #    https://python-packaging-user-guide.readthedocs.org/en/latest/tutorial.html#creating-your-own-project
@@ -53,8 +57,7 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
 
-    # What does your project relate to?
-    keywords='sample setuptools development',
+    keywords='EOF, PCA, complex empirical orthogonal function, complex principal component analysis',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
