@@ -277,24 +277,5 @@ class CEOF(UserDict):
             self.data['eofs'][ind[0],ind[1],:] = output['eofs'][n,:]
 
 	# ----
-	self.set_wavelenght()
-
-        #for k in self.data.keys():
-        #    print k, self.data[k].shape, type(self.data[k])
-
-        if 'figs' in self.metadata:
-	    print "Creating figures for %s modes" % nmodes
-            for n in range(nmodes):
-                if 'suffix' in self.metadata['figs']:
-                    filename="../figs/CEOF_%s_mode%s.eps" % (self.metadata['figs']['suffix'],(n+1))
-                else:
-                    filename="../figs/CEOF_mode%s.eps" % (n+1)
-                limits={'LatIni':-5, 'LatFin':15, 'LonIni':-60, 'LonFin':-25}
-                #self.plot(self['eofs'][:,:,n],self['pcs'][:,n],(n+1),self['variancefraction'][n],filename=filename,limits=limits,cumvarfrac=self['variancefraction'][:(n+1)].sum())
-                import graphics
-                graphics.plot(self['eofs'][:,:,n], self['pcs'][:,n],
-                        (n+1),self['variancefraction'][n],
-                        filename=filename,
-                        data = self.data,
-                        limits=limits,
-                        cumvarfrac=self['variancefraction'][:(n+1)].sum())
+        self.data['L_x'] = wavelenght_from_ceof(self.data['eofs'],
+                self.data['lat'], self.data['lon'])

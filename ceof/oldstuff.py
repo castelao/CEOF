@@ -19,3 +19,26 @@ def CEOF_2D_limited(input,metadata={'variancefraction_explainned':0.95}):
                 filtred[t,:,:]+=ceof['eofs'][:,:,n].real*x['pcs'][t,n].real
         #self.data['filtred']=filtred
         return filtred
+
+
+"""
+    This was inside the class CEOF, in the function go().
+    The right place for it would be as a function to plot the figures and it would be loaded with the object [C]EOF.
+
+
+        if 'figs' in self.metadata:
+            print "Creating figures for %s modes" % self.nmodes
+            for n in range(self.nmodes):
+                if 'suffix' in self.metadata['figs']:
+                    filename="../figs/CEOF/CEOF_%s_mode%s.png" % (self.metadata['figs']['suffix'],(n+1))
+                else:
+                    filename="../figs/CEOF/CEOF_mode%s.png" % (n+1)
+
+                limits={'LatIni':-2.5, 'LatFin':15, 'LonIni':-62.5, 'LonFin':-35}
+                graphics.plot(self['eofs'][:,:,n], self['pcs'][:,n],
+                        (n+1),self['variancefraction'][n],
+                        filename=filename,
+                        data = self.data,
+                        limits=limits,
+                        cumvarfrac=self['variancefraction'][:(n+1)].sum())
+"""
