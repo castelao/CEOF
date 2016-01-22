@@ -26,6 +26,17 @@ def CEOF_2D_limited(input,metadata={'variancefraction_explainned':0.95}):
     The right place for it would be as a function to plot the figures and it would be loaded with the object [C]EOF.
 
 
+        if 'prefilter' in self.metadata:
+            import pdb; pdb.set_trace()
+            print "Filtering in time"
+            if self.metadata['prefilter']['type'] == 'bandpass':
+                self.filter(var, l=self.metadata['prefilter']['l'],
+                        type=self.metadata['prefilter']['type'],
+                        l2=self.metadata['prefilter']['l2'])
+            else:
+                self.filter(var, l=self.metadata['prefilter']['l'],
+                        type=self.metadata['prefilter']['type'])
+
         if 'figs' in self.metadata:
             print "Creating figures for %s modes" % self.nmodes
             for n in range(self.nmodes):

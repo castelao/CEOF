@@ -224,12 +224,7 @@ class CEOF(UserDict):
 
         if ('Lat' not in self.keys()) or ('Lon' not in self.keys()):
             self.data['Lon'], self.data['Lat'] = numpy.meshgrid(self.data['lon'],self.data['lat'])
-        if 'prefilter' in self.metadata:
-            print "Filtering in time"
-            if self.metadata['prefilter']['type'] == 'bandpass':
-                self.filter(var,l=self.metadata['prefilter']['l'],type=self.metadata['prefilter']['type'], l2=self.metadata['prefilter']['l2'],)
-            else:
-                self.filter(var,l=self.metadata['prefilter']['l'],type=self.metadata['prefilter']['type'])
+
         # ---- Normalize -----------------------------------------------------
         #self.data['ssh']=self.data['ssh']-self.data['ssh'].mean()
         # --------------------------------------------------------------------
