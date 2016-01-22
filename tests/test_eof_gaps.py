@@ -44,3 +44,12 @@ def test_eof_recons():
 
     # FIXME: Create another test for this signal
     # y = np.sin(2 * pi * t)[:, None] + (0.1 * np.sin(2 * pi * t/2))[:, None] * x
+
+
+def test_sorted_lambda():
+    """ Check if eigenvalues are sorted
+    """
+    for i in range(10):
+        X = np.random.random((10,4))
+        pcs, exp_var, eofs = eof_with_gaps(X)
+        assert (np.diff(exp_var) <= 0).all()
