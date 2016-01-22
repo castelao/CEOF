@@ -86,37 +86,7 @@ def CEOF_2D(data, cfg=None):
     return output
 
 
-class CEOF_Filter():
-    """ Unfinished
-    
-        This will be a class to filter using EOF. One define the number of modes
-	  or the desired variability to be explainned. The field is decomposed
-	  by CEOF, than the field is reconstructed considering only the n first
-	  modes.
-
-
-
-    """
-    def __init__(self,input,metadata={'variancefraction_explainned':0.95}):
-        """
-	"""
-	N = pcs.shape[1]    # Now it is all the modes.
-        T = pcs.shape[0]
-	I = eofs.shape[0]
-	J = eofs.shape[1]
-        data_filtered = numpy.zeros((T, I, J))
-
-        eof_amp=(eof.real**2+eof.imag**2)**0.5
-        eof_phase=numpy.arctan2(eof.imag,eof.real)
-        pc_amp = (numpy.real(pc)**2+numpy.imag(pc)**2)**0.5
-        pc_phase = numpy.arctan2(numpy.imag(pc),numpy.real(pc))	
-
-	for t in range(T):
-            for n in range(N):
-	        data_filtered[t] = data_filtered[t] + eof_amp[:,:,n]*pc_amp[t,n]*numpy.cos(eof_phase[:,:,n]+pc_phase[t,n])
-        return
-
-
+#def CEOF_ND(data, cfg=None):
 
 class CEOF(UserDict):
     """
