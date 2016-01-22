@@ -21,6 +21,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
+requirements = [
+        'numpy',
+        'scipy'
+]
+
 version_file = open(path.join(here, 'VERSION'))
 version = version_file.read().strip()
 
@@ -42,6 +47,7 @@ setup(
     author='Guilherme Castelao',
     author_email='guilherme@castelao.net',
 
+    install_requires=requirements,
     license='3-clause BSD',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -64,11 +70,6 @@ setup(
     packages=[
         'ceof',
     ],
-    # List run-time dependencies here.  These will be installed by pip when your
-    # project is installed. For an analysis of "install_requires" vs pip's
-    # requirements files see:
-    # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
-    install_requires=['numpy', 'scipy'],
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
