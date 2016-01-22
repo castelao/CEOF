@@ -5,18 +5,26 @@ import numpy as np
 
 from ceof.ceof_gap import eof
 
-def test_eof_shapes():
-    x = np.random.random((3, 3))
-    p, v, e = eof(x)
-    assert p.shape == (3, 3)
-    assert v.shape == (3,)
-    assert e.shape == (3, 3)
 
-    x = np.random.random((10, 3))
-    p, v, e = eof(x)
-    assert p.shape == (10, 3)
-    assert v.shape == (3,)
-    assert e.shape == (3, 3)
+def check_eof_shape(x):
+    """ Check if the outputs of eof have the correct shape
+
+        This first dimension of the input will be the PC dimension
+    """
+    p, v, e = eof_from_svd(x)
+    n, m = x.shape
+    nmodes = min(n, m)
+    assert p.shape == (n, nmodes)
+    assert v.shape == (nmodes,)
+    assert e.shape == (m, nmodes)
+
+
+def test_eof_shapes():
+    check_eof_shape(np.random.random((3, 3)))
+
+    check_eof_shape(np.random.random((10, 3)))
+
+    check_eof_shape(np.random.random((3, 4)))
 
 
 def eof_reconstruct(x):
