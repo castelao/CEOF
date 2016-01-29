@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: Latin-1 -*-
+# -*- coding: utf-8 -*-
 
 """ Class to deal with Complex EOF
 """
