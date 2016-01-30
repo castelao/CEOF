@@ -138,7 +138,7 @@ def eof_decompose(x):
                 x.reshape((S[0], x.size/S[0]), order="C"))
 
         nmodes = eofs.shape[-1]
-        eofs = eofs.reshape(list(S[1:]) + [nmodes])
+        eofs = eofs.reshape(list(S[1:]) + [nmodes], order="C")
 
         return pcs, exp_var, eofs
     # Below here it's expected only 2D input x.
