@@ -1,7 +1,20 @@
-pyCEOF
-======
+===============================
+CEOF
+===============================
 
-Python module to compute the Complex Empirical Orthogonal Function
+.. image:: https://img.shields.io/travis/castelao/CEOF.svg
+        :target: https://travis-ci.org/castelao/CEOF
+
+.. image:: https://img.shields.io/pypi/v/CEOF.svg
+        :target: https://pypi.python.org/pypi/CEOF
 
 
-ATENTION. Be carefull, this code is about 8 years old, and I wrote it in the middle of my PhD, with lots of things going on. It's a mess, but worked. I'll improve it when I have a chance.
+Perform the Complex Empirical Orthogonal Functions Analysis, or if you prefer the Complex Principal Component Analysis.
+
+* Free software: BSD license
+* Documentation: https://CEOF.readthedocs.org.
+
+Features
+--------
+
+* TODO
